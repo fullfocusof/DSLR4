@@ -15,7 +15,6 @@
 //	DequeNode* first;
 //	DequeNode* last;
 //	bool isNegative;
-//	int num;
 //};
 //
 //void Print(LongNumber& num)
@@ -92,8 +91,6 @@
 //	LongNumber result;
 //	result.first = nullptr;
 //	result.last = nullptr;
-//
-//	result.num = stoi(ex);
 //
 //	if (ex[0] == '-')
 //	{
@@ -225,6 +222,54 @@
 //	result.isNegative = num1.isNegative != num2.isNegative;
 //}
 //
+//int Compare(LongNumber& num1, LongNumber& num2) // 0 - "="      1 - num1>num2      -1 - num1<num2
+//{
+//	int result = 0;
+//
+//	if (num1.isNegative && !num2.isNegative)
+//	{
+//		return -1;
+//	}
+//	else if (!num1.isNegative && num2.isNegative)
+//	{
+//		return 1;
+//	}
+//	else
+//	{
+//		DequeNode* curNum1 = num1.first;
+//		DequeNode* curNum2 = num2.first;
+//
+//		if (!num1.isNegative && !num2.isNegative)
+//		{
+//			while (curNum1 != nullptr && curNum2 != nullptr)
+//			{
+//				if (curNum1->data > curNum2->data) result = 1;
+//				else if (curNum1->data < curNum2->data) result = -1;
+//				curNum1 = curNum1->next;
+//				curNum2 = curNum2->next;
+//			}
+//
+//			if (curNum1 != nullptr) result = 1;
+//			else if (curNum2 != nullptr) result = -1;
+//		}
+//		else if (num1.isNegative && num2.isNegative)
+//		{
+//			while (curNum1 != nullptr && curNum2 != nullptr)
+//			{
+//				if (curNum1->data > curNum2->data) result = -1;
+//				else if (curNum1->data < curNum2->data) result = 1;
+//				curNum1 = curNum1->next;
+//				curNum2 = curNum2->next;
+//			}
+//
+//			if (curNum1 != nullptr) result = -1;
+//			else if (curNum2 != nullptr) result = 1;
+//		}
+//	}
+//
+//	return result;
+//}
+//
 //int main()
 //{
 //	setlocale(LC_ALL, "ru");
@@ -236,15 +281,13 @@
 //		LongNumber num2 = Init(); cout << endl;
 //		LongNumber answer; 
 //
-//		if (num1.num > num2.num)
+//		int cmpResult = Compare(num1, num2);
+//		if (cmpResult == -1)
 //		{
-//			MultiplyLong(answer, num1, num2);
-//		}
-//		else
-//		{
-//			MultiplyLong(answer, num2, num1);
+//			swap(num1, num2);
 //		}
 //
+//		MultiplyLong(answer, num1, num2);
 //		cout << "Ответ:" << endl;
 //		Print(num1); cout << " * "; Print(num2); cout << " = "; Print(answer); cout << endl << endl;
 //

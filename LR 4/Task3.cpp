@@ -158,23 +158,50 @@ int Compare(LongNumber& num1, LongNumber& num2) // 0 - "="      1 - num1>num2   
 	return result;
 }
 
+LongNumber Sum(LongNumber& num1, LongNumber& num2)
+{
+	LongNumber result;
+	result.first = nullptr;
+	result.last = nullptr;
+
+	DequeNode* tempnum1 = num1.first, * tempnum2 = num2.first;
+
+	int trans = 0, tempVal1, tempVal2;
+
+	while (tempnum1 != nullptr || tempnum2 != nullptr || trans != 0)
+	{
+		if (tempnum1 != nullptr)
+		{
+			tempVal1 = tempnum1->data;
+			tempnum1 = tempnum1->next;
+		}
+		else
+		{
+			tempVal1 = 0;
+		}
+
+		if (tempnum2 != nullptr)
+		{
+			tempVal2 = tempnum2->data;
+			tempnum2 = tempnum2->next;
+		}
+		else
+		{
+			tempVal2 = 0;
+		}
+
+		InsertEnd(result, (tempVal1 + tempVal2 + trans) % 10);
+		trans = (tempVal1 + tempVal2 + trans) / 10;
+	}
+
+	return result;
+}
+
 void Decision(LongNumber& result, LongNumber& num1, LongNumber& num2)
 {
 	result.first = nullptr;
 	result.last = nullptr;
 	result.isNegative = false;
-
-	int compareResult = Compare(num1, num2);
-	if (compareResult == 0)
-	{
-		result.isNegative = false;
-		InsertEnd(result, 0);
-		return;
-	}
-	else if(compareResult == -1) 
-	{
-		swap(num1, num2);
-	}
 
 	DequeNode* curNum1 = num1.first;
 	DequeNode* curNum2 = num2.first;
@@ -199,7 +226,7 @@ void Decision(LongNumber& result, LongNumber& num1, LongNumber& num2)
 		curNum2 = curNum2 != nullptr ? curNum2->next : nullptr;
 	}
 
-	while (result.last->prev != nullptr && result.last->data == 0)
+	while (result.last != nullptr && result.last->data == 0)
 	{
 		DequeNode* temp = result.last;
 		result.last = result.last->prev;
@@ -219,8 +246,36 @@ int main()
 		LongNumber num1 = Init(); cout << endl;
 		LongNumber num2 = Init(); cout << endl;
 		LongNumber answer;
+		answer.first = nullptr;
+		answer.last = nullptr;
 
-		Decision(answer, num1, num2);
+		int compareResult = Compare(num1, num2);
+		if (compareResult == 0)
+		{
+			answer.isNegative = false;
+			InsertEnd(answer, 0);
+		}
+		else
+		{
+			if (compareResult == -1)
+			{
+				swap(num1, num2);
+			}
+
+			if (num1.isNegative && num2.isNegative)
+			{
+				Decision(answer, num2, num1);
+			}
+			else if (num2.isNegative)
+			{
+				answer = Sum(num1, num2);
+				answer.isNegative = false;
+			}
+			else
+			{
+				Decision(answer, num1, num2);
+			}
+		}
 
 		cout << "Ответ: "; 
 		Print(num1); cout << " - "; Print(num2); cout << " = "; Print(answer); cout << endl << endl;
